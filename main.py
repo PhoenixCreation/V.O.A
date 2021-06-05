@@ -13,49 +13,27 @@ engine = pyttsx3.init()
 engine.setProperty('rate', 170)
 r = sr.Recognizer()
 
-# gui = Tk()
-# gui.geometry("270x150")
-# button1 = Button(gui, text=' 1 ', fg='black', bg='red', height=1, width=7)
-# button1.pack()
-# w = Label(gui, text='GeeksForGeeks.org!')
-# w.pack()
-# gui.mainloop()
+gui = Tk()
+gui.geometry("750x175")
+frame = Frame(gui, bg="black")
+frame.place(relwidth=1, relheight=0.9, rely=0.1)
+
+last_command = ["veronika "]
 
 
 def initiate():
     talk_back("How can I help you?")
 
 
-def talk_back(speech="No speech provided"):
+def talk_back(speech):
+    label = Label(frame, text=speech)
+    label.pack()
     engine.say(speech)
     engine.runAndWait()
 
 
-def take_command():
-    pass
-    # with sr.Microphone() as source:
-    #     print("Say something!")
-    #     audio = r.listen(source)
-
-    # print("recognizing audio...")
-
-    # try:
-    #     command = r.recognize_google(audio)
-    #     error = ""
-    #     print("Google Speech Recognition thinks you said " + command)
-    # except sr.UnknownValueError:
-    #     command = ""
-    #     error = "Could not understand audio 0"
-    #     print("Google Speech Recognition could not understand audio")
-    # except sr.RequestError as e:
-    #     command = ''
-    #     error = "something went wrong -1"
-    #     print(
-    #         "Could not request results from Google Speech Recognition service; {0}".format(e))
-    # return command,error
-
-
 def handle_command(command):
+    last_command.append(command)
     commands = command.split()
     if len(commands) > 0 and "ver" in commands[0]:
         commands = commands[1:]
@@ -79,6 +57,8 @@ def handle_command(command):
                 city = "surat"
                 if "of" in commands:
                     city = " ".join(commands[commands.index("of"):])
+                if "in" in commands:
+                    city = " ".join(commands[commands.index("in"):])
 
                 # creating url and requests instance
                 url = "https://www.google.com/search?q="+"weather"+city
@@ -125,3 +105,53 @@ def handle_command(command):
                     talk_back(
                         "90% you won't get this joke but anyway here it is,     ")
                     talk_back(joke.json()["joke"])
+            elif commands[0] == "test":
+                talk_back("test successfully completed")
+
+
+def take_command():
+    pass
+    # with sr.Microphone() as source:
+    #     print("Say something!")
+    #     audio = r.listen(source)
+
+    # print("recognizing audio...")
+
+    # try:
+    #     command = r.recognize_google(audio)
+    #     error = ""
+    #     print("Google Speech Recognition thinks you said " + command)
+    # except sr.UnknownValueError:
+    #     command = ""
+    #     error = "Could not understand audio 0"
+    #     print("Google Speech Recognition could not understand audio")
+    # except sr.RequestError as e:
+    #     command = ''
+    #     error = "something went wrong -1"
+    #     print(
+    #         "Could not request results from Google Speech Recognition service; {0}".format(e))
+    # return command,error
+
+
+def handle_submit(event):
+    handle_command(info.get())
+    info.set("veronika ")
+
+
+def handle_up(event):
+    if len(last_command) > 0:
+        info.set(last_command.pop())
+
+
+# btn = Button(gui, text=' 5 ', fg='black', bg='red',
+#              command=lambda: take_command(), height=1, width=7)
+# btn.pack()
+info = StringVar()
+info_cont = Entry(gui, textvariable=info, width=700,
+                  justify="center")
+info_cont.bind("<Key-Return>", handle_submit)
+info_cont.bind("<Key-Up>", handle_up)
+info_cont.pack()
+initiate()
+info_cont.focus()
+gui.mainloop()

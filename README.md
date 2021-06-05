@@ -25,7 +25,7 @@
 
 # Wheather
 
-- veronika `weather` [of `<city>`]
+- veronika `weather` [(of | in) `<city>`]
 - (if city is not provided then it will give weather of surat)
 - (if city is provided then it will give weather of city )
 

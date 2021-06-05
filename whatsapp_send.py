@@ -90,7 +90,7 @@ def send_message(name, message):
     time.sleep(1)
     device.shell(
         f'am start -a android.intent.action.VIEW -d "https://api.whatsapp.com/send?phone={number}&text="')
-    time.sleep(3)
+    time.sleep(5)
     device.shell("input touchscreen tap 350 1225")
     message = message.replace(" ", "%s")
     device.shell('input text ' + message)
