@@ -1,0 +1,7 @@
+SpeechRecognition
+PyAudio
+pyttsx3
+pywhatkit
+pure-pyhton-adb
+opencv-python
+pytesseract
