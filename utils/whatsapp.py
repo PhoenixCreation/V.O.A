@@ -10,7 +10,8 @@ if len(devices) == 0:
 
 device = devices[0]
 
-contact_list = []
+contact_list = [{"type": "group", "name": "phoenixcreation",
+                 "number": "KYxxEO8Bjhp7VBS9S1zWj5"}]
 
 
 def retrive_contacts():
@@ -34,7 +35,7 @@ def retrive_contacts():
     contacts = f.readlines()
     contacts = [contacts[i].split(", ") for i in range(len(contacts))]
     for i in range(len(contacts)):
-        contact_list.append({"name": contacts[i][14][5:].lower(), "number": contacts[i][11][7:].replace(
+        contact_list.append({"type": "personal", "name": contacts[i][14][5:].lower(), "number": contacts[i][11][7:].replace(
             " ", "")})
 
 
@@ -44,13 +45,16 @@ retrive_contacts()
 def send_message(name, message):
     number = ""
     numbers = []
+    current = {}
     for contact in contact_list:
         if name.lower() in contact["name"]:
             if len(numbers) > 0:
                 if numbers[len(numbers)-1] != contact["number"]:
                     numbers.append(contact["number"])
+                    current = contact
             else:
                 numbers.append(contact["number"])
+                current = contact
 
     if len(numbers) == 0:
         response = "No contact found. Maybe you mean"
@@ -72,8 +76,9 @@ def send_message(name, message):
         print(numbers)
         return "Mulitiple numbers found. try specific name"
     number = numbers[0]
-
-    if not number[0] == "+":
+    print(number)
+    print(current)
+    if not number[0] == "+" and current["type"] == "personal":
         number = "+91" + str(number)
 
     already_on = device.shell(
@@ -88,9 +93,14 @@ def send_message(name, message):
         device.shell('input touchscreen swipe 560 880 560 380')
     device.shell('input keyevent 3')
     time.sleep(1)
-    device.shell(
-        f'am start -a android.intent.action.VIEW -d "https://api.whatsapp.com/send?phone={number}&text="')
-    time.sleep(5)
+    if current["type"] == "personal":
+        device.shell(
+            f'am start -a android.intent.action.VIEW -d "https://api.whatsapp.com/send?phone={number}&text="')
+        time.sleep(4)
+    else:
+        device.shell(
+            f'am start -a android.intent.action.VIEW -d https://chat.whatsapp.com/{number}')
+        time.sleep(5)
     device.shell("input touchscreen tap 350 1225")
     message = message.replace(" ", "%s")
     device.shell('input text ' + message)
@@ -100,3 +110,6 @@ def send_message(name, message):
     if not already_on:
         device.shell('input keyevent 26')
     return "message sent successfully"
+
+
+send_message("phoenixcreation", "hi there")

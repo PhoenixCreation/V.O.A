@@ -12,6 +12,7 @@
 - `[word]` means it's optional
 - `{word}` means it's compulsory word
 - `(word 1 | word 2 | ... | word n)` means one of the word
+- #<sentance 1> <-> #<sentance 2> means both can be used in any order. i.e. sentance 1, sentance 2 == sentance 2, sentance 1
 
 # Play
 
@@ -25,7 +26,7 @@
 
 # Wheather
 
-- veronika `weather` [(of | in) `<city>`]
+- veronika `weather` [(of | in) `<city>`] [ (on | at) ('tommorow' | date)]
 - (if city is not provided then it will give weather of surat)
 - (if city is provided then it will give weather of city )
 
@@ -33,7 +34,9 @@
 
 > `WARNING`: You need to configure adb of your phone first. If you don't know how then check online, you will find better soltions then I can Explain.
 
-- veronika send whatsapp message `<message>` to `<name>` (sends message to person using adb configuration of your phone)
+- veronika send whatsapp [message] {that} `<message>` {to} `<user>`
+- veronika send whatsapp [message] {to} `<user>` {that} `<message>`
+- All above (sends message to person using adb configuration of your phone)
 
 # Tell
 

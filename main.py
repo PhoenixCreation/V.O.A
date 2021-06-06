@@ -7,8 +7,8 @@ from bs4 import BeautifulSoup as bs
 import requests
 from tkinter import *
 from config import RADIO_URL
-from whatsapp_send import send_message
-
+from utils.whatsapp import send_message
+from utils.weather import get_weather
 engine = pyttsx3.init()
 engine.setProperty('rate', 170)
 r = sr.Recognizer()
@@ -18,7 +18,7 @@ gui.geometry("750x175")
 frame = Frame(gui, bg="black")
 frame.place(relwidth=1, relheight=0.9, rely=0.1)
 
-last_command = ["veronika "]
+last_command = ["veronika send whatsapp"]
 
 
 def initiate():
@@ -54,38 +54,38 @@ def handle_command(command):
                 res = kit.info(" ".join(commands), lines=1)
                 talk_back(res)
             elif commands[0] == "weather":
+                date = "today"
+                if "on" in commands:
+                    date = " ".join(commands[commands.index("on")+1:])
+                    commands = commands[:commands.index("on")]
+                if "at" in commands:
+                    date = " ".join(commands[commands.index("at")+1:])
+                    commands = commands[:commands.index("at")]
                 city = "surat"
                 if "of" in commands:
-                    city = " ".join(commands[commands.index("of"):])
+                    city = " ".join(commands[commands.index("of")+1:])
                 if "in" in commands:
-                    city = " ".join(commands[commands.index("in"):])
-
-                # creating url and requests instance
-                url = "https://www.google.com/search?q="+"weather"+city
-                html = requests.get(url).content
-
-                # getting raw data
-                soup = bs(html, 'html.parser')
-                temp = soup.find(
-                    'div', attrs={'class': 'BNeawe iBp4i AP7Wnd'}).text
-                # this conatains time and sky description
-                data = soup.find(
-                    'div', attrs={'class': 'BNeawe tAd8D AP7Wnd'}).text
-
-                # format the data
-                data = data.split('\n')
-                sky = data[1]
-                print(temp)
-                print(sky)
-                talk_back(
-                    f'Temperature of {city} is {temp[:2]} degree celcius and sky is {sky}')
+                    city = " ".join(commands[commands.index("in")+1:])
+                talk_back(get_weather(city, date))
             elif commands[0] == "send" and commands[1] == "whatsapp":
                 commands = commands[2:]
                 to_index = commands.index("to")
-                name = commands[to_index+1:]
-                name = " ".join(name)
-                message = " ".join(
-                    commands[commands.index("message")+1:commands.index("to")])
+                message_index = -1
+                if "message" in commands:
+                    message_index = commands.index("message")
+                that_index = -1
+                if "that" in commands:
+                    that_index = commands.index("that")
+                if that_index != -1:
+                    if message_index + 1 == that_index:
+                        name = " ".join(commands[to_index+1:])
+                        message = " ".join(commands[that_index+1:to_index])
+                    else:
+                        name = " ".join(commands[to_index+1:that_index])
+                        message = " ".join(commands[that_index+1:])
+                else:
+                    name = " ".join(commands[to_index+1:])
+                    message = " ".join(commands[message_index+1:to_index])
                 talk_back(send_message(name, message))
             elif commands[0] == "tell":
                 commands = commands[1:]
@@ -107,6 +107,8 @@ def handle_command(command):
                     talk_back(joke.json()["joke"])
             elif commands[0] == "test":
                 talk_back("test successfully completed")
+            else:
+                talk_back("I didn't get that. Try again please.")
 
 
 def take_command():
@@ -152,6 +154,7 @@ info_cont = Entry(gui, textvariable=info, width=700,
 info_cont.bind("<Key-Return>", handle_submit)
 info_cont.bind("<Key-Up>", handle_up)
 info_cont.pack()
-initiate()
+# initiate()
+info.set(last_command[0])
 info_cont.focus()
 gui.mainloop()
