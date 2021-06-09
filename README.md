@@ -1,11 +1,60 @@
 # Index
 
+- [Installation](#installation)
 - [Rules](#Rules)
-- [Play](#Play)
-- [What is](#What-is)
-- [Wheather](#Wheather)
-- [Whatsapp](#Whatsapp)
-- [Tell](#Tell)
+- Commands:
+  - [Play](#Play)
+  - [What is](#What-is)
+  - [Wheather](#Wheather)
+  - [Whatsapp](#Whatsapp)
+  - [Tell](#Tell)
+
+# installation
+
+## Recommendations
+
+- Use linux(MacOS too) for better experience
+- Configure adb with your phone for phone speicific features like whatsapp message. You can read more about this [here.](https://developer.android.com/studio/command-line/adb). (I will suggest you use wireless configuration)
+- Have a stable internet connection. (Ofcourse you need internet but a good quality one too.)
+- Have a good quality microphone. (Not actually needed but will give you better experience)
+
+## Step 1: Clone this repo.
+
+Then `cd` into it.
+
+```bash
+cd V.O.A
+```
+
+## Step 2: Run follwing command to complete set up
+
+### For Windows
+
+```bash
+python configure.py
+```
+
+### For Linux and MacOS
+
+```bash
+python3 configure.py
+```
+
+## Step 3: Run follwing to check
+
+### For Windows
+
+```bash
+python main.py
+```
+
+### For Linux and MacOS
+
+```bash
+python3 main.py
+```
+
+If a window pops up then write `veronika test`, if you here anything setup is successful.
 
 # Rules
 
@@ -45,4 +94,4 @@
 
 ## TODO
 
-- [ ] Whatsapp-group configuration, so we can send message to groups too.
+- [x] Whatsapp-group configuration, so we can send message to groups too.
