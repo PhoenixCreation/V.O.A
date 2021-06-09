@@ -1,4 +1,3 @@
 __pycache__
-contacts.txt
-sample.txt
+*.txt
 pywhatkit_dbs.txt
