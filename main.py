@@ -14,11 +14,11 @@ engine.setProperty('rate', 170)
 r = sr.Recognizer()
 
 gui = Tk()
-gui.geometry("750x175")
+gui.geometry("750x575")
 frame = Frame(gui, bg="black")
 frame.place(relwidth=1, relheight=0.9, rely=0.1)
 
-last_command = ["veronika send whatsapp"]
+last_command = []
 
 
 def initiate():
@@ -33,6 +33,7 @@ def talk_back(speech):
 
 
 def handle_command(command):
+    command = command.lower()
     last_command.append(command)
     commands = command.split()
     if len(commands) > 0 and "ver" in commands[0]:
@@ -112,27 +113,26 @@ def handle_command(command):
 
 
 def take_command():
-    pass
-    # with sr.Microphone() as source:
-    #     print("Say something!")
-    #     audio = r.listen(source)
+    with sr.Microphone() as source:
+        print("Say something!")
+        audio = r.listen(source)
 
-    # print("recognizing audio...")
+    print("recognizing audio...")
 
-    # try:
-    #     command = r.recognize_google(audio)
-    #     error = ""
-    #     print("Google Speech Recognition thinks you said " + command)
-    # except sr.UnknownValueError:
-    #     command = ""
-    #     error = "Could not understand audio 0"
-    #     print("Google Speech Recognition could not understand audio")
-    # except sr.RequestError as e:
-    #     command = ''
-    #     error = "something went wrong -1"
-    #     print(
-    #         "Could not request results from Google Speech Recognition service; {0}".format(e))
-    # return command,error
+    try:
+        command = r.recognize_google(audio)
+        print("Google Speech Recognition thinks you said " + command)
+        info.set(command)
+        handle_command(command)
+    except sr.UnknownValueError:
+        command = "Could not understand audio, Please try again"
+        talk_back(command)
+        print("Google Speech Recognition could not understand audio")
+    except sr.RequestError as e:
+        command = "something went wrong"
+        talk_back(command)
+        print(
+            "Could not request results from Google Speech Recognition service; {0}".format(e))
 
 
 def handle_submit(event):
@@ -145,9 +145,9 @@ def handle_up(event):
         info.set(last_command.pop())
 
 
-# btn = Button(gui, text=' 5 ', fg='black', bg='red',
-#              command=lambda: take_command(), height=1, width=7)
-# btn.pack()
+btn = Button(gui, text='Speak', fg='black', bg='red',
+             command=lambda: take_command(), height=1, width=7)
+btn.pack()
 info = StringVar()
 info_cont = Entry(gui, textvariable=info, width=700,
                   justify="center")
@@ -155,6 +155,5 @@ info_cont.bind("<Key-Return>", handle_submit)
 info_cont.bind("<Key-Up>", handle_up)
 info_cont.pack()
 # initiate()
-info.set(last_command[0])
 info_cont.focus()
 gui.mainloop()
