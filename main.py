@@ -6,6 +6,8 @@ import pywhatkit as kit
 from bs4 import BeautifulSoup as bs
 import requests
 from tkinter import *
+import os
+import datetime
 from config import RADIO_URL
 from utils.whatsapp import send_message
 from utils.weather import get_weather
@@ -19,6 +21,18 @@ frame = Frame(gui, bg="black")
 frame.place(relwidth=1, relheight=0.9, rely=0.1)
 
 last_command = []
+if not os.path.isfile("VOA_log.txt"):
+    fs = open("VOA_log.txt", "w")
+    fs.close()
+fs = open("VOA_log.txt", "r")
+logs = fs.readlines()
+fs.close()
+for log in logs:
+    log = log.replace("\n", "")
+    log = log.split(", ")
+    last_command.append(
+        {"timestamp": log[0], "command": log[1], "output": " ".join(log[2:])})
+log_file = open("VOA_log.txt", "a")
 
 
 def initiate():
@@ -34,14 +48,31 @@ def talk_back(speech):
 
 def handle_command(command):
     command = command.lower()
-    last_command.append(command)
+    last_command.append(
+        {"timestamp": datetime.datetime.now(), "command": command})
+    log_file.write(f'{datetime.datetime.now()}, {command}\n')
     commands = command.split()
     if len(commands) > 0 and "ver" in commands[0]:
         commands = commands[1:]
         if not len(commands) > 0:
             print("no command found")
         else:
-            if commands[0] == "play":
+            if commands[0] == "who":
+                if commands[1] == "am" or commands[1] == "i":
+                    fs = open("profile.txt", "r")
+                    profile = fs.readlines()
+                    info = {}
+                    for data in profile:
+                        data = data.replace("\n", "")
+                        data = data.split(", ")
+                        info[data[0]] = data[1]
+                    response = f'You are {"Mr." if info["gender"][0] == "m" else "Mrs."} {info["first_name"]} {info["middle_name"][0]}. {info["last_name"]} also known as {info["address_name"]}'
+                    talk_back(response)
+                elif commands[1] == "is":
+                    name = " ".join(commands[2:])
+                    print(name)
+                    talk_back(name)
+            elif commands[0] == "play":
                 commands = commands[1:]
                 if "radio" in commands:
                     webbrowser.open(RADIO_URL)
@@ -97,7 +128,6 @@ def handle_command(command):
                 if commands[0] == "what" and commands[1] == "is":
                     commands.pop(0)
                     commands.pop(0)
-                    print(" ".join(commands))
                     handle_command("veronika what is "+" ".join(commands))
                 elif commands[0] == "joke":
                     joke = requests.get(
@@ -116,7 +146,6 @@ def take_command():
     with sr.Microphone() as source:
         print("Say something!")
         audio = r.listen(source)
-
     print("recognizing audio...")
 
     try:
@@ -142,7 +171,7 @@ def handle_submit(event):
 
 def handle_up(event):
     if len(last_command) > 0:
-        info.set(last_command.pop())
+        info.set(last_command.pop()["command"])
 
 
 btn = Button(gui, text='Speak', fg='black', bg='red',

@@ -1,5 +1,6 @@
 from ppadb.client import Client
 import time
+import os
 
 adb = Client(host='127.0.0.1', port=5037)
 devices = adb.devices()
@@ -14,6 +15,10 @@ contact_list = []
 
 
 def retrive_contacts():
+    if not os.path.isfile("groups.txt"):
+        fs = open("groups.txt", "w")
+        fs.close()
+
     with open("groups.txt", "r") as f:
         groups = f.readlines()
     for group in groups:
@@ -36,6 +41,7 @@ def retrive_contacts():
             count = 9
         contacts[i] = contacts[i][count:]
     final.writelines(contacts)
+    final.close()
     f = open("contacts.txt", "r")
     contacts = f.readlines()
     contacts = [contacts[i].split(", ") for i in range(len(contacts))]
@@ -52,7 +58,7 @@ def send_message(name, message):
     numbers = []
     current = {}
     for contact in contact_list:
-        if name.lower() in contact["name"]:
+        if name.lower() in contact["name"].lower():
             if len(numbers) > 0:
                 if numbers[len(numbers)-1] != contact["number"]:
                     numbers.append(contact["number"])
@@ -112,7 +118,4 @@ def send_message(name, message):
         device.shell('input keyevent 4')
     if not already_on:
         device.shell('input keyevent 26')
-    return "message sent successfully"
-
-
-# send_message("buddies", "Su bhaio kyare college chalu karvana?")
+    return f'message sent successfully to {current["name"]}'
