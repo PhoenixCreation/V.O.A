@@ -3,6 +3,8 @@
 - [Installation](#installation)
 - [Rules](#Rules)
 - Commands:
+  - [Time](#Time)
+  - [Who](#Who)
   - [Play](#Play)
   - [What is](#What-is)
   - [Wheather](#Wheather)
@@ -63,6 +65,17 @@ If a window pops up then write `veronika test`, if you here anything setup is su
 - `(word 1 | word 2 | ... | word n)` means one of the word
 - #<sentance 1> <-> #<sentance 2> means both can be used in any order. i.e. sentance 1, sentance 2 == sentance 2, sentance 1
 
+# Time
+
+- veronika time (Tells you time)
+- veronika date (Tells you date)
+- veronika timestamp (Tells you current timestamp )
+
+# Who
+
+- veronika who [am] i (Tells you your name)
+- veronika who is `<someone>` (Tells you about someone)
+
 # Play
 
 - veronika play [the] `radio` (will start a radio on gaana.com)
@@ -95,3 +108,4 @@ If a window pops up then write `veronika test`, if you here anything setup is su
 ## TODO
 
 - [x] Whatsapp-group configuration, so we can send message to groups too.
+- [ ] Fix what is

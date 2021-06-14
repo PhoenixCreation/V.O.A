@@ -32,7 +32,6 @@ for log in logs:
     log = log.split(", ")
     last_command.append(
         {"timestamp": log[0], "command": log[1], "output": " ".join(log[2:])})
-log_file = open("VOA_log.txt", "a")
 
 
 def initiate():
@@ -50,14 +49,26 @@ def handle_command(command):
     command = command.lower()
     last_command.append(
         {"timestamp": datetime.datetime.now(), "command": command})
+    log_file = open("VOA_log.txt", "a")
     log_file.write(f'{datetime.datetime.now()}, {command}\n')
+    log_file.close()
     commands = command.split()
     if len(commands) > 0 and "ver" in commands[0]:
         commands = commands[1:]
         if not len(commands) > 0:
             print("no command found")
         else:
-            if commands[0] == "who":
+            if commands[0] == "time":
+                now = datetime.datetime.now()
+                talk_back(now.strftime("it's %I : %M : %p"))
+            elif commands[0] == "date":
+                now = datetime.datetime.now()
+                talk_back(now.strftime("%d %B %Y"))
+            elif commands[0] == "timestamp":
+                now = datetime.datetime.now()
+                talk_back(now.strftime(
+                    "It's %A,  %B %d today and it is %I : %M : %p now"))
+            elif commands[0] == "who":
                 if commands[1] == "am" or commands[1] == "i":
                     fs = open("profile.txt", "r")
                     profile = fs.readlines()
@@ -70,8 +81,8 @@ def handle_command(command):
                     talk_back(response)
                 elif commands[1] == "is":
                     name = " ".join(commands[2:])
-                    print(name)
-                    talk_back(name)
+                    info = kit.info(name, lines=1)
+                    talk_back(info)
             elif commands[0] == "play":
                 commands = commands[1:]
                 if "radio" in commands:
@@ -81,10 +92,11 @@ def handle_command(command):
                     kit.playonyt(" ".join(commands))
                 else:
                     kit.playonyt(" ".join(commands))
-            elif commands[0] == "what" and commands[1] == "is":
-                commands = commands[2:]
-                res = kit.info(" ".join(commands), lines=1)
-                talk_back(res)
+            elif commands[0] == "what":
+                if commands[1] == "is":
+                    commands = commands[2:]
+                    res = kit.info(" ".join(commands), lines=1)
+                    talk_back(res)
             elif commands[0] == "weather":
                 date = "today"
                 if "on" in commands:
@@ -166,7 +178,6 @@ def take_command():
 
 def handle_submit(event):
     handle_command(info.get())
-    info.set("veronika ")
 
 
 def handle_up(event):
