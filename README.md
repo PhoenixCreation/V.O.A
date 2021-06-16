@@ -10,6 +10,7 @@
   - [Wheather](#Wheather)
   - [Whatsapp](#Whatsapp)
   - [Tell](#Tell)
+  - [News](#News)
 
 # installation
 
@@ -105,7 +106,11 @@ If a window pops up then write `veronika test`, if you here anything setup is su
 - veronika tell [me a] what is `<topic>` (same as what is `<topic>`)
 - veronika tell [me a] joke (tells you a joke)
 
+# News
+
+- veronika `news` (Tells you news from google, not gurenteed to working perfectly fine)
+
 ## TODO
 
 - [x] Whatsapp-group configuration, so we can send message to groups too.
-- [ ] Fix what is
+- [ ] Fix what is, still awaiting

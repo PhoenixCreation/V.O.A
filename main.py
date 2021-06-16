@@ -11,6 +11,7 @@ import datetime
 from config import RADIO_URL
 from utils.whatsapp import send_message
 from utils.weather import get_weather
+from utils.news import get_news
 engine = pyttsx3.init()
 engine.setProperty('rate', 170)
 r = sr.Recognizer()
@@ -111,26 +112,27 @@ def handle_command(command):
                 if "in" in commands:
                     city = " ".join(commands[commands.index("in")+1:])
                 talk_back(get_weather(city, date))
-            elif commands[0] == "send" and commands[1] == "whatsapp":
-                commands = commands[2:]
-                to_index = commands.index("to")
-                message_index = -1
-                if "message" in commands:
-                    message_index = commands.index("message")
-                that_index = -1
-                if "that" in commands:
-                    that_index = commands.index("that")
-                if that_index != -1:
-                    if message_index + 1 == that_index:
-                        name = " ".join(commands[to_index+1:])
-                        message = " ".join(commands[that_index+1:to_index])
+            elif commands[0] == "send":
+                if commands[1] == "whatsapp":
+                    commands = commands[2:]
+                    to_index = commands.index("to")
+                    message_index = -1
+                    if "message" in commands:
+                        message_index = commands.index("message")
+                    that_index = -1
+                    if "that" in commands:
+                        that_index = commands.index("that")
+                    if that_index != -1:
+                        if message_index + 1 == that_index:
+                            name = " ".join(commands[to_index+1:])
+                            message = " ".join(commands[that_index+1:to_index])
+                        else:
+                            name = " ".join(commands[to_index+1:that_index])
+                            message = " ".join(commands[that_index+1:])
                     else:
-                        name = " ".join(commands[to_index+1:that_index])
-                        message = " ".join(commands[that_index+1:])
-                else:
-                    name = " ".join(commands[to_index+1:])
-                    message = " ".join(commands[message_index+1:to_index])
-                talk_back(send_message(name, message))
+                        name = " ".join(commands[to_index+1:])
+                        message = " ".join(commands[message_index+1:to_index])
+                    talk_back(send_message(name, message))
             elif commands[0] == "tell":
                 commands = commands[1:]
                 if 'me' in commands:
@@ -150,6 +152,10 @@ def handle_command(command):
                     talk_back(joke.json()["joke"])
             elif commands[0] == "test":
                 talk_back("test successfully completed")
+            elif commands[0] == "news":
+                newses = get_news()
+                for news in newses:
+                    talk_back(news)
             else:
                 talk_back("I didn't get that. Try again please.")
 
