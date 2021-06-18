@@ -11,6 +11,7 @@
   - [Whatsapp](#Whatsapp)
   - [Tell](#Tell)
   - [News](#News)
+  - [Call](#Call)
 
 # installation
 
@@ -109,6 +110,11 @@ If a window pops up then write `veronika test`, if you here anything setup is su
 # News
 
 - veronika `news` (Tells you news from google, not gurenteed to working perfectly fine)
+
+# Call
+
+- veronika call `<user>` (calls normally)
+- veronika call `<user>` [on] ('speaker' | 'speakerphone') (calls on speaker phone)
 
 ## TODO
 

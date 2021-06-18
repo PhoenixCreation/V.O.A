@@ -10,6 +10,7 @@ import os
 import datetime
 from config import RADIO_URL
 from utils.whatsapp import send_message
+from utils.call import make_call
 from utils.weather import get_weather
 from utils.news import get_news
 engine = pyttsx3.init()
@@ -156,6 +157,19 @@ def handle_command(command):
                 newses = get_news()
                 for news in newses:
                     talk_back(news)
+            elif commands[0] == "call":
+                if "speaker" in commands:
+                    if "on" in commands:
+                        commands.pop(commands.index("on"))
+                    talk_back(make_call(
+                        " ".join(commands[1:commands.index("speaker")]), speaker=True))
+                elif "speakerphone" in commands:
+                    if "on" in commands:
+                        commands.pop(commands.index("on"))
+                    talk_back(make_call(
+                        " ".join(commands[1:commands.index("speakerphone")]), speaker=True))
+                else:
+                    talk_back(make_call(" ".join(commands[1:])))
             else:
                 talk_back("I didn't get that. Try again please.")
 
