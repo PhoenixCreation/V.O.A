@@ -1,5 +1,7 @@
 import speech_recognition as sr
 import pyttsx3
+from gtts import gTTS
+from playsound import playsound
 import time
 import webbrowser
 import pywhatkit as kit
@@ -43,8 +45,13 @@ def initiate():
 def talk_back(speech):
     label = Label(frame, text=speech)
     label.pack()
-    engine.say(speech)
-    engine.runAndWait()
+    try:
+        myobj = gTTS(text=speech, lang='en', slow=False, tld="co.in")
+        myobj.save("res.mp3")
+        playsound("res.mp3")
+    except:
+        engine.say("Check your internet")
+        engine.runAndWait()
 
 
 def handle_command(command):
