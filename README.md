@@ -96,6 +96,8 @@ If a window pops up then write `veronika test`, if you here anything setup is su
 
 # Whatsapp
 
+`Requirement:` Your phone should allow app urls to open in app instead of browser. If you don't know what this mean then start an issue, I will explain there.
+
 > `WARNING`: You need to configure adb of your phone first. If you don't know how then check online, you will find better soltions then I can Explain.
 
 - veronika send whatsapp [message] {that} `<message>` {to} `<user>`
