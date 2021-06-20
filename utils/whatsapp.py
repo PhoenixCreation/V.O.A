@@ -4,6 +4,8 @@ from ppadb.client import Client
 import time
 # Classic os module for interaction with os, here for file check
 import os
+# Import the width and height of user's phone
+from config import PHONE_WIDTH, PHONE_HEIGHT, COUNTRY_CODE, PHONE_HAS_LOCK, PHONE_LOCK_PASSWORD, PHONE_LOCK_OK_BUTTON
 
 
 # Initiate the adb client on default ports: localhost:5037 (as per doc)
@@ -146,9 +148,7 @@ def send_message(name, message):
 
     # If we are sending to person and number does not start from country code
     if not number[0] == "+" and current["type"] == "personal":
-        # Currently we will assume it is Indian(+91) number but later can be raised warning
-        # TODO: transfer default country code to config
-        number = "+91" + str(number)
+        number = COUNTRY_CODE + str(number)
 
     # This is to check is device is curently locked or not, display is off or not
     already_on = device.shell(
@@ -167,8 +167,8 @@ def send_message(name, message):
         time.sleep(1)
         # swipe up to unlock
         device.shell('input touchscreen swipe 560 880 560 380')
-        # TODO: If user has a password then do something
-        # Send the password through input command and then click ok if neccessary
+        if PHONE_HAS_LOCK:
+            unlock_phone()
 
     # press the home button, 3 is home key code
     # Because whatsapp intent does not top priority so it might open in background
@@ -198,9 +198,8 @@ def send_message(name, message):
     # Type the message in input box
     device.shell('input text ' + message)
     # Tap on the send button at the right bottom of the screen
-    # TODO: transfer the touch coordinates to config file,
-    # It will be width - 50 height - 50
-    device.shell("input touchscreen tap 650 1250")
+    device.shell(
+        f'input touchscreen tap {PHONE_WIDTH - 50} {PHONE_HEIGHT - 50}')
 
     # Press the back button 5 times to go back from app
     # we are using backs instead of home so that whatsapp gets cleared from memory of phone
@@ -215,3 +214,11 @@ def send_message(name, message):
 
     # return the response
     return f'message sent successfully to {current["name"]}'
+
+
+# Function to unlock phone with password or PIN
+def unlock_phone():
+    time.sleep(1)
+    device.shell("input text "+PHONE_LOCK_PASSWORD)
+    device.shell(
+        f'input touchscreen tap {PHONE_LOCK_OK_BUTTON["x"]} {PHONE_LOCK_OK_BUTTON["y"]}')

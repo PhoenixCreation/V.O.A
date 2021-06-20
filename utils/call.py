@@ -2,6 +2,8 @@
 from ppadb.client import Client
 # for time.sleep(sec)
 import time
+# Import the speaker button coordinates
+from config import CALL_SPEAKER_BUTTON
 
 
 # Initiate the adb client on default ports: localhost:5037 (as per doc)
@@ -105,8 +107,8 @@ def make_call(name, speaker=False):
         # Also there is not much to listen in first 5 seconds of call except bip bip bip
         time.sleep(5)
         # touch on the speaker button
-        # TODO: transfer the touch coordinates to config file
-        device.shell("input touchscreen tap 155 940")
+        device.shell(
+            f'input touchscreen tap {CALL_SPEAKER_BUTTON["x"]} {CALL_SPEAKER_BUTTON["y"]}')
 
     # return the response string
     return f'calling {current["name"]} {"on speaker" if speaker else ""}'
