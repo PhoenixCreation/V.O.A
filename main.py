@@ -20,6 +20,8 @@ from tkinter import *
 import os
 # Classic datetime module for date and time manupulation
 import datetime
+# For threading the flow
+import threading
 # Get the Radio url from config.py
 from config import RADIO_URL
 # Get the function which sends whatsapp message as per request
@@ -292,8 +294,8 @@ def take_command():
 
 # When ENTER key is pressed from GUI, this function is called
 def handle_submit(event):
-    # handle command from input box
-    handle_command(info.get())
+    # handle command from input box on saprate thread so UI keeps working
+    threading.Thread(target=lambda: handle_command(info.get())).start()
 
 
 # When user clicks up arrow on text box, fills with last command like terminal
