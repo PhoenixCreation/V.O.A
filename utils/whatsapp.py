@@ -138,10 +138,10 @@ def send_message(name, message):
 
     # If there are multiple matches of name then ask for specific name
     if len(numbers) > 1:
-        print("Mulitiple numbers found. try specific name")
+        print("Multiple numbers found. try specific name")
         print(numbers)
         # return from the function
-        return "Mulitiple numbers found. try specific name"
+        return "Multiple numbers found. try specific name"
 
     # Everything is fine, good to go
     number = numbers[0]
