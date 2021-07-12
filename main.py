@@ -81,18 +81,21 @@ def talk_back(speech):
     # Add to the frame whatever is spoken back to read if you didn't understand
     label = Label(frame, text=speech)
     label.pack()
+    speech_output_label_var.set("processing")
     # Using try/catch to so if anything goes wrong we can have fallback
     try:
         # Initiate the google text to speach module
         myobj = gTTS(text=speech, lang='en', slow=False, tld="co.in")
         # Save in res.mp3 file, because we can't play it directly
         myobj.save("res.mp3")
+        speech_output_label_var.set("playing")
         # play the audio with playsound module
         playsound("res.mp3")
     except:
         # 99% problem will be of internet down, so here we can use the offline text to speech
         engine.say("Check your internet")
         engine.runAndWait()
+    speech_output_label_var.set("...")
 
 
 # Function that handles the command, BRAIN of everything
@@ -267,8 +270,10 @@ def take_command():
     # Use microphone to listen to the audio
     with sr.Microphone() as source:
         print("Say something!")
+        speech_output_label_var.set("listning")
         audio = r.listen(source)
     print("recognizing audio...")
+    speech_output_label_var.set("processing")
 
     # Using try/catch because there can be so many things that can go wrong
     try:
@@ -290,9 +295,17 @@ def take_command():
         talk_back(command)
         print(
             "Could not request results from Google Speech Recognition service; {0}".format(e))
+    speech_output_label_var.set("...")
 
+# When speak button is pressed
+
+
+def handle_listning():
+    threading.Thread(target=lambda: take_command()).start()
 
 # When ENTER key is pressed from GUI, this function is called
+
+
 def handle_submit(event):
     # handle command from input box on saprate thread so UI keeps working
     threading.Thread(target=lambda: handle_command(info.get())).start()
@@ -307,8 +320,12 @@ def handle_up(event):
 
 # Button to start listning for audio input command
 btn = Button(gui, text='Speak', fg='black', bg='red',
-             command=lambda: take_command(), height=1, width=7)
+             command=lambda: handle_listning(), height=1, width=7)
 btn.pack()
+speech_output_label_var = StringVar()
+speech_output_label_var.set("...")
+speech_output_label = Label(gui, textvariable=speech_output_label_var)
+speech_output_label.pack()
 # varibale that stores the text input box values
 info = StringVar()
 # Input text box for writting command
