@@ -12,6 +12,7 @@
   - [Tell](#Tell)
   - [News](#News)
   - [Call](#Call)
+  - [Exit](#Exit)
 
 # installation
 
@@ -118,7 +119,16 @@ If a window pops up then write `veronika test`, if you here anything setup is su
 - veronika call `<user>` (calls normally)
 - veronika call `<user>` [on] ('speaker' | 'speakerphone') (calls on speaker phone)
 
+# Exit
+
+- veronika exit (closes the current application)
+
 ## TODO
 
 - [x] Whatsapp-group configuration, so we can send message to groups too.
-- [ ] Fix what is, still awaiting
+- [ ] 🏃‍♂️Fix what is, (processing, PR given to wikipedia.py)
+- [ ] Create todo functionality
+  - if you have unfinished todo on start up then tell about it
+  - should be able to add and mark as done for all todos (how to identify the todo to be marked as done? no idea)
+  - if it is running continuesly then should check for todos on interval (each minute is preferable)
+  - before integrating it into the main functionality, should be run individually and should be strictly tested for various scenrios.

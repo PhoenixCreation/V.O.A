@@ -142,7 +142,7 @@ def handle_command(command):
             elif commands[0] == "timestamp":
                 now = datetime.datetime.now()
                 talk_back(now.strftime(
-                    "It's %A,  %B %d today and it is %I : %M : %p now"))
+                    "It's %A,  %B %d today and it is %I : %M %p now"))
             # questions starting with who
             # either know your details
             # Or find about someone famous
@@ -238,6 +238,9 @@ def handle_command(command):
                     talk_back(
                         "90% you won't get this joke but anyway here it is,     ")
                     talk_back(joke.json()["joke"])
+            # close the application
+            elif commands[0] == "exit":
+                os._exit(1)
             # Test command for development purposes
             elif commands[0] == "test":
                 talk_back("test successfully completed")
