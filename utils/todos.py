@@ -1,5 +1,6 @@
 import os
 import time
+from fuzzywuzzy import process
 
 if not os.path.isfile("Todos_list.txt"):
     fs = open("Todos_list.txt", "w")
@@ -38,7 +39,6 @@ def retrive_undone_todos():
         if todo[4][:1].lower() == "f":
             remaining_todos.append(todo)
     remaining_todos.sort(key=sorting_function)
-    # print(remaining_todos)
     return remaining_todos
 
 
@@ -63,13 +63,13 @@ def retrive_due_todos():
     return due_todos
 
 
-# print(retrive_all_todos())
-# print("-----------------------------")
-# print([todo[0] for todo in retrive_undone_todos()])
-# print("-----------------------------")
-# print([todo[0] for todo in retrive_next_todos(1, all=True)])
-# print("-----------------------------")
-# print([todo[0] for todo in retrive_due_todos()])
+print(retrive_all_todos())
+print("-----------------------------")
+print([todo[0] for todo in retrive_undone_todos()])
+print("-----------------------------")
+print([todo[0] for todo in retrive_next_todos(1, all=True)])
+print("-----------------------------")
+print([todo[0] for todo in retrive_due_todos()])
 
 
 def mark_done_todo(id, done_timing=time.strftime("%d %B %Y %H:%M")):
@@ -77,11 +77,41 @@ def mark_done_todo(id, done_timing=time.strftime("%d %B %Y %H:%M")):
     for todo in todos:
         if todo[0] == str(id):
             index = todos.index(todo)
-            todos[index][4] = "True"
-            todos[index].append(done_timing if index == len(
-                todos) - 1 else done_timing + "\n")
-            break
-    todos = [", ".join(todo) for todo in todos]
-    fs = open("Todos_list.txt", "w")
-    fs.writelines(todos)
-    fs.close()
+            if todos[index][4][:1].lower() == "f":
+                todos[index][4] = "True"
+                todos[index].append(done_timing if index == len(
+                    todos) - 1 else done_timing + "\n")
+                todos = [", ".join(todo) for todo in todos]
+                fs = open("Todos_list.txt", "w")
+                fs.writelines(todos)
+                fs.close()
+                return True
+            else:
+                return False
+    else:
+        return False
+
+
+def mark_done_with_title(title, done_timing=time.strftime("%d %B %Y %H:%M")):
+    todos = retrive_all_todos()
+    titles = [todo[2] for todo in todos]
+    scores = process.extract(title, titles)
+    print(scores)
+    if len(scores) >= 1:
+        if scores[0][1] < 40:
+            return "no good match found on your query, maybe try being more specific"
+    if len(scores) >= 2:
+        if scores[0][1] == scores[1][1]:
+            return "duplicates found, maybe false hit but try being more specific"
+        else:
+            if mark_done_todo(todos[titles.index(scores[0][0])][0], done_timing):
+                return "makred done successfully"
+            else:
+                return "alredy marked as done"
+    elif len(scores) >= 1:
+        if mark_done_todo(todos[titles.index(scores[0][0])][0], done_timing):
+            return "makred done successfully"
+        else:
+            return "alredy marked as done"
+    else:
+        return "nothing found"
