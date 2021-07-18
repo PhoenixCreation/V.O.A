@@ -63,13 +63,13 @@ def retrive_due_todos():
     return due_todos
 
 
-print(retrive_all_todos())
-print("-----------------------------")
-print([todo[0] for todo in retrive_undone_todos()])
-print("-----------------------------")
-print([todo[0] for todo in retrive_next_todos(1, all=True)])
-print("-----------------------------")
-print([todo[0] for todo in retrive_due_todos()])
+# print(retrive_all_todos())
+# print("-----------------------------")
+# print([todo[0] for todo in retrive_undone_todos()])
+# print("-----------------------------")
+# print([todo[0] for todo in retrive_next_todos(1, all=True)])
+# print("-----------------------------")
+# print([todo[0] for todo in retrive_due_todos()])
 
 
 def mark_done_todo(id, done_timing=time.strftime("%d %B %Y %H:%M")):
