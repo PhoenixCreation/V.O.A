@@ -1,12 +1,21 @@
+# Classic os module for interaction with os and file
 import os
+# For timestamp purposes
 import time
+# TO find the nearest match of string from list of string
 from fuzzywuzzy import process
 
+# Todos_list.txt will hold all the todos working as a database for this todo app
+# Check if file exists or not, if not then create one
 if not os.path.isfile("Todos_list.txt"):
     fs = open("Todos_list.txt", "w")
     fs.close()
 
 
+# Function to add new todo
+# Params
+#   - title(str): title of the todo
+#   - end_time(): %d %B %Y %H:%M formated date and time
 def add_todo(title, end_time):
     todos = retrive_all_todos()
     last_id = int(todos[len(todos) - 1][0])
@@ -20,10 +29,12 @@ def add_todo(title, end_time):
     fs.close()
 
 
+# Function fot sorting help, it is just utility so can be ignored
 def sorting_function(e):
     return time.mktime(time.strptime(e[3], "%d %B %Y %H:%M"))
 
 
+# Function to retrive all todos despite of it is done or not
 def retrive_all_todos():
     fs = open("Todos_list.txt", "r")
     todos = fs.readlines()
@@ -32,6 +43,7 @@ def retrive_all_todos():
     return todos
 
 
+# Function to retrive all undone todos in sorted order from closest to due to furthest to due
 def retrive_undone_todos():
     todos = retrive_all_todos()
     remaining_todos = []
@@ -42,7 +54,8 @@ def retrive_undone_todos():
     return remaining_todos
 
 
-def retrive_next_todos(count, all=False):
+# Function to retrive specific number of undone todos that due after current time
+def retrive_next_todos(count=10, all=False):
     remaining_todos = retrive_undone_todos()
     next_todos = []
     for todo in remaining_todos:
@@ -53,6 +66,7 @@ def retrive_next_todos(count, all=False):
     return next_todos[:count]
 
 
+# Function to retrive todos that are already pass due date in reverse order so last due one comes first
 def retrive_due_todos():
     remaining_todos = retrive_undone_todos()
     due_todos = []
@@ -63,15 +77,10 @@ def retrive_due_todos():
     return due_todos
 
 
-# print(retrive_all_todos())
-# print("-----------------------------")
-# print([todo[0] for todo in retrive_undone_todos()])
-# print("-----------------------------")
-# print([todo[0] for todo in retrive_next_todos(1, all=True)])
-# print("-----------------------------")
-# print([todo[0] for todo in retrive_due_todos()])
-
-
+# Functoin to mark a task(todo) as Done by id
+# Params
+#   - id(number | str(number)): id of the todo, first entry in database
+#   - done_timing(str): %d %B %Y %H:%M formated date and time of the task ending time
 def mark_done_todo(id, done_timing=time.strftime("%d %B %Y %H:%M")):
     todos = retrive_all_todos()
     for todo in todos:
@@ -92,11 +101,14 @@ def mark_done_todo(id, done_timing=time.strftime("%d %B %Y %H:%M")):
         return False
 
 
+# Function to mark a task(todo) as Done by title or sort form of title
+# Params
+#   - title(str): title or catch words in title
+#   - done_timing(str): %d %B %Y %H:%M formated date and time of the task ending time
 def mark_done_with_title(title, done_timing=time.strftime("%d %B %Y %H:%M")):
     todos = retrive_all_todos()
     titles = [todo[2] for todo in todos]
     scores = process.extract(title, titles)
-    print(scores)
     if len(scores) >= 1:
         if scores[0][1] < 40:
             return "no good match found on your query, maybe try being more specific"
