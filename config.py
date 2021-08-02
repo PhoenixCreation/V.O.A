@@ -21,6 +21,9 @@ PHONE_HEIGHT = 1280
 # Coordinates of speaker button
 CALL_SPEAKER_BUTTON = {"x": 155, "y": 940}
 
+# Coordinates of mail send button, Generally they should work fine with all devices but still check once before using it
+MAIL_SEND_BUTTON = {"x": PHONE_WIDTH - 140, "y": 200}
+
 # WARNING: sensitive information
 PHONE_HAS_LOCK = False
 PHONE_LOCK_PASSWORD = "hetpatel"
