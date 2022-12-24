@@ -34,3 +34,4 @@ urllib3==1.26.5
 vext==0.7.6
 vext.gi==0.7.4
 wikipedia==1.4.0
+setuptools>=65.5.1 # not directly required, pinned by Snyk to avoid a vulnerability
