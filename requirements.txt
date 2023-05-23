@@ -23,7 +23,7 @@ python3-xlib==0.15
 pyttsx3==2.90
 PyTweening==1.0.3
 pywhatkit==4.7
-requests==2.25.1
+requests==2.31.0
 ruamel.yaml==0.17.9
 ruamel.yaml.clib==0.2.2
 six==1.16.0
